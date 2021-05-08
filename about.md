@@ -3,5 +3,16 @@ layout: page
 title: About
 permalink: /about/
 ---
+처음 쓰는 블로그. 
 
-Another minimal style of Jekyll theme for writers.
+딥러닝 공부를 하면서 읽은 논문들을 리뷰하고, 시간이 되면 직접 파이토치로 재구현한 기록들을 이 블로그에 남길 예정이다. 
+
+블로그 만들기는 처음이라 인터페이스가 정말로 조악할수도 있다. 하면서 배워갈 계획.
+
+필자는 독일의 Freiburg 대학에서 딥러닝 석사 과정을 밟고 있다. Computer vision, NLP, RL 등 딥러닝 전반에 걸쳐 흥미가 있지만, 
+내가 속한 연구소가 Neural Architecture Search와
+Computer Vision을 중점적으로 다루었기 때문에 이 블로그에서 다루는 논문들도 그쪽 관련 연구들에 중점을 두게 될것 같다.
+
+그외에도 머신러닝, 통계학등 내가 자주 찾아봐야 한다고 생각되는 내용들을 이 블로그에 노트 삼아 업로드 할 계획이다. 혹여나 이 블로그를 찾아온
+사람이 있다면 나의 노트들이 작게나마 도움이 되기를 바란다.
+

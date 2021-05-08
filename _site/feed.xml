@@ -1,204 +1,254 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2021-04-26T11:44:43+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Hamilton</title><subtitle>A minimal and beautiful Jekyll theme best for writing and note-taking.</subtitle><author><name>Shangzhi Huang</name></author><entry><title type="html">My Example Post</title><link href="http://localhost:4000/2016/05/20/my-example-post.html" rel="alternate" type="text/html" title="My Example Post" /><published>2016-05-20T00:00:00+02:00</published><updated>2016-05-20T00:00:00+02:00</updated><id>http://localhost:4000/2016/05/20/my-example-post</id><content type="html" xml:base="http://localhost:4000/2016/05/20/my-example-post.html">&lt;p&gt;Eos eu docendi tractatos sapientem, brute option menandri in vix, quando vivendo accommodare te ius. Nec melius fastidii constituam id, viderer theophrastus ad sit, hinc semper periculis cum id. Noluisse postulant assentior est in, no choro sadipscing repudiandae vix. Vis in euismod delenit dignissim. Ex quod nostrum sit, suas decore animal id ius, nobis solet detracto quo te.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2021-05-08T10:34:24+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jinu’s Blog</title><subtitle>딥러닝 논문 리뷰 및 구현 블로그</subtitle><author><name>Jinu</name></author><entry><title type="html">Differentiable Architecture Search (DARTS)의 원리</title><link href="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html" rel="alternate" type="text/html" title="Differentiable Architecture Search (DARTS)의 원리" /><published>2021-05-03T00:00:00+02:00</published><updated>2021-05-03T00:00:00+02:00</updated><id>http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS</id><content type="html" xml:base="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;저번 포스팅에서 Neural Architecture Search가 무엇인지 간략하게 설명하였다. 이번에는 내가 석사논문연구를 하면서 사용한 NAS방법론인
+&lt;a href=&quot;https://arxiv.org/abs/1806.09055.pdf&quot;&gt;Differentiable Architecture Search (Liu et. al 2019)&lt;/a&gt;에 대해서 다루어 보겠다.&lt;/p&gt;
 
-&lt;p&gt;No laudem altera adolescens has, volumus lucilius eum no. Eam ei nulla audiam efficiantur. Suas affert per no, ei tale nibh sea. Sea ne magna harum, in denique scriptorem sea, cetero alienum tibique ei eos. Labores persequeris referrentur eos ei.&lt;/p&gt;</content><author><name>Shangzhi Huang</name></author><summary type="html">Eos eu docendi tractatos sapientem, brute option menandri in vix, quando vivendo accommodare te ius. Nec melius fastidii constituam id, viderer theophrastus ad sit, hinc semper periculis cum id. Noluisse postulant assentior est in, no choro sadipscing repudiandae vix. Vis in euismod delenit dignissim. Ex quod nostrum sit, suas decore animal id ius, nobis solet detracto quo te.</summary></entry><entry><title type="html">Some articles are just so long they deserve a really long title to see if things will break well</title><link href="http://localhost:4000/misc/2016/05/20/super-long-article.html" rel="alternate" type="text/html" title="Some articles are just so long they deserve a really long title to see if things will break well" /><published>2016-05-20T00:00:00+02:00</published><updated>2016-05-20T00:00:00+02:00</updated><id>http://localhost:4000/misc/2016/05/20/super-long-article</id><content type="html" xml:base="http://localhost:4000/misc/2016/05/20/super-long-article.html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
+&lt;p&gt;DARTS 이전의 다른 NAS방법론들은 대부분 이산적인 (discrete) search space를 정의하고 거기서 candidate architecture를 샘플링하고 evaluate
+하는 작업을 반복하는 방식으로 탐색을 수행하였다. 이러한 방법들은 보통 탐색한번에 수천개에서 많게는 수만개에 달하는 architecture를 evaluate
+해야했기때문에 리소스가 굉장히 많이 소요된다는 단점이 있었다. 이러한 점을 극복하기 위해 DARTS는 이산적인 search space에 continuous
+relaxation을 하여 미분을 가능케 하였고, gradient descent를 통한 빠르고 효율적인 architecture search를 수행할 수 있게 만들었다. 이 글에서
+DARTS가 어떻게 search space를 연속적으로 만들었고, 어떠한 방식으로 search가 이루어지는지 알아보자.&lt;/p&gt;
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
+&lt;p&gt;DARTS의 학습과정은 search와 evaluation 두개의 phase로 나누어진다. Search phase에서는 meta-network라고 하는 네트워크가 정의되고 그것의 
+파라미터들이 학습된다. 그리고 Evaluation phase에서는 학습된 meta-network를 바탕으로 우리가 얻고싶은 최종 네트워크를 derive한 후 그것을
+처음부터 다시 학습시킨다. 하나씩 천천히 알아보자.&lt;/p&gt;
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;</content><author><name>Shangzhi Huang</name></author><category term="misc" /><summary type="html">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</summary></entry><entry><title type="html">This post demonstrates post content styles</title><link href="http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles.html" rel="alternate" type="text/html" title="This post demonstrates post content styles" /><published>2016-05-20T00:00:00+02:00</published><updated>2016-05-20T00:00:00+02:00</updated><id>http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles</id><content type="html" xml:base="http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles.html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.&lt;/p&gt;
+&lt;h2 id=&quot;search-phase&quot;&gt;Search Phase&lt;/h2&gt;
+&lt;h3 id=&quot;architecture-search&quot;&gt;Architecture Search&lt;/h3&gt;
 
-&lt;h2 id=&quot;some-great-heading-h2&quot;&gt;Some great heading (h2)&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS-a.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu.&lt;/p&gt;
+&lt;p&gt;DARTS가 어떤 방식으로 NAS를 수행하는지 설명하기 위헤, 간단한 예를 하나 들겠다. 위 그림의 (a)같이 4개의 노드를 가진 direct acyclic graph (DAG) 형태의
+네트워크의 구조가 있고, 아직 어떤 operation을 사용하여 노드들을 연결할지 모른다고 하자. 여기서 노드는 데이터의 latent representation이고
+화살표 (connection)들은 convolution, pooling 등의 operation 이다. 그리고 우리는 각 connection마다 3개의 candidate operation, 즉 convolution, 
+pooling, none(연결이 없다는 뜻) 중에서 하나를 골라 부여해주어 네트워크를 만들고 싶다고 하자.&lt;/p&gt;
 
-&lt;p&gt;Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
+&lt;p&gt;이렇게 DAG의 구조를 가지는 네트워크에서 각 노드의 값은 이렇게 계산이 된다:&lt;/p&gt;
 
-&lt;h2 id=&quot;another-great-heading-h2&quot;&gt;Another great heading (h2)&lt;/h2&gt;
+\[x^{(j)} = \sum_{i &amp;lt; j} o^{(i, j)}(x^{(i)}) \tag{1}\]
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.&lt;/p&gt;
+&lt;p&gt;여기서 $x^{(i)}$ , $x^{(j)}$ 는 각각 $i$, $j$ 번째 노드의 값이고 $o^{(i, j)}$ 는 $i$ 번째 노드와 $j$ 번째 노드를 연결하는 operation 이다.
+풀어 말하면, $j$번째 노드의 값은 그것의 상위 노드들(parent nodes)의 값에 각각 그 connection에 상응하는 operation을 적용한 값들의 합이다.
+예를 들어, 아래 그림과 같이 노드2의 값은 노드0의 값에 $o^{(0, 2)}$를 적용한 것과 노드1의 값에 $o^{(1, 2)}$를 적용한 값의 합이 되겠다.&lt;/p&gt;
 
-&lt;h3 id=&quot;some-great-subheading-h3&quot;&gt;Some great subheading (h3)&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS-a1.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum.&lt;/p&gt;
+&lt;p&gt;이러한 계산방식은 sequential한 형태의 네트워크가 latent representation의 값을 계산하는 일반적인 형식이다. 그런데 여기서 우리가 해결하고 싶은 
+것은 각 $o^{(i, j)}$가 어떤 operation이어야 네트워크가 최적이 되느냐이다. 각 $o^{(i, j)}$가 될 수 있는 operation이 3개라면 (convolution,
+pooling, none) 총 6개의 화살표가 있으니 만들 수 있는 네트워크의 갯수가 총 3^6=729가지가 된다. 당연히도 이모든 경우의 수를 각각 실험 해보기엔
+시간이 너무 오래 걸릴것이다.&lt;/p&gt;
 
-&lt;p&gt;Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc.&lt;/p&gt;
+&lt;p&gt;그래서 DARTS는 어떻게 이 문제를 해결할까? 답은 바로 그림의 (b)같이, 노드를 연결하는 모든 connection들이 하나의 operation이 아닌 3개의 
+candidate operations 의 가중합 (weighted sum) 이라고 보는 것이다. 논문에선 이 연산자를 mixed operation이라고 부른다 (이렇게 mixed
+operation을 사용하여 만들어진 네트워크를 meta-network라고 부른다).&lt;/p&gt;
 
-&lt;h3 id=&quot;some-great-subheading-h3-1&quot;&gt;Some great subheading (h3)&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS-b.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
+&lt;p&gt;Mixed operation 을 사용하여 latent representation의 값을 구하는 수식을 알아보자. $O$를 모든 operation들의 집합 (e.g., convolution,
+pooling, none)이라고 하자 (operation $o(\cdot)$는 $x^{(i)}$를 transform 하는 함수라 볼수있다). 그렇다면 mixed operation은 이렇게 표현할 수 있다:&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;This quote will &lt;em&gt;change&lt;/em&gt; your life. It will reveal the &lt;i&gt;secrets&lt;/i&gt; of the universe, and all the wonders of humanity. Don’t &lt;em&gt;misuse&lt;/em&gt; it.&lt;/p&gt;
-&lt;/blockquote&gt;
+\[\bar{o}^{(i,j)}(x) = \sum_{o \in O} \frac{\exp({\alpha_{o}^{(i,j)}})} {\sum_{o' \in O} \exp(\alpha_{o'}^{(i,j)})} o(x)
+\tag{2}\]
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt.&lt;/p&gt;
+&lt;p&gt;여기서 $\bar{o}^{(i,j)}$는 노드 $i$ 와 노드 $j$ 사이의 mixed operation 이고 $\alpha^{(i,j)}$는 connection $(i, j)$의 
+operation들의 가중치들을 가지는 벡터이다 (그러니까 $\alpha_{o}^{(i,j)}$는 connection $(i, j)$안의 operation $o$의 가중치). 
+수식을 잘 보면, 분수형태는 각 가중치의 softmax를 구하는 것임을 알 수 있다. 그리고 softmax된 각 가중치 를 각 $o(x)$ 에 곱한 후 그 값들을 전부
+더하면 mixed operation의 값을 구할 수 있다. 최종적으로, mixed operation을 사용하여 한 노드의 값을 구하려면, $(1)$의 식에 $o^{(i, j)}$
+를 $\bar{o}^{(i, j)}$로 바꿔주면 된다.&lt;/p&gt;
 
-&lt;h3 id=&quot;some-great-subheading-h3-2&quot;&gt;Some great subheading (h3)&lt;/h3&gt;
+&lt;p&gt;operation $o$의 가중치 $\alpha_{o}^{(i,j)}$는 무엇을 의미할까? 바로 connection $(i, j)$에서의 $o$의 strength다. 
+특정 $\alpha_{o}^{(i,j)}$가 크면 클수록, $\bar{o}^{(i,j)}(x)$의 값이 $o$의 영향을 많이 많이 받고, 반대로 특정 $\alpha_{o}^{(i,j)}$
+가 0에 수렴 할수록 그 $o$는 아무 역할도 하지 않게된다. 극단적인 예로, $\alpha^{(i,j)} = [\alpha_{Conv}^{(i,j)},
+\alpha_{Pool}^{(i,j)}, \alpha_{None}^{(i,j)}] = [1, 0, 0]$ 이라고 해보자. 그러면 $\bar{o}^{(i, j)}(x) = Conv(x)$ 가 된다.&lt;/p&gt;
 
-&lt;p&gt;Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum.&lt;/p&gt;
+&lt;p&gt;이제 우리가 왜 mixed operation을 사용하는지 슬슬 감이 온다. 우리가 정의한 가중치들은 연속적인 변수이고, 그것은 곧 가중치들을 gradient
+descent를 사용하여 validation loss가 최소가 되도록 학습할 수 있다는 뜻이 된다. DARTS의 메인 아이디어는 바로 이 가중치들을 학습하여 각
+connection마다 어떤 operation이 가장 좋은 operation인지를 탐색하는 것이다. 그리하여 우리는 네트워크 구조 최적화문제를 최적의
+$\alpha = \{\alpha^{(i,j)}\}$를 찾는 문제로 변환시킬수 있다.&lt;/p&gt;
 
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello, World!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;cell-based-structure&quot;&gt;Cell-based Structure&lt;/h2&gt;
+&lt;p&gt;지금까지 DARTS에서 search space가 어떻게 정의 되고 어떻게 미분 가능한 연속적인 형태를 가지게 되었는지 알아보았다. 그런데 여기서 짚고 넘어갈
+것이 있다. 위에서 예로 든 그림에서는 노드가 4개 밖에 없었지만 현실에서 NAS를 수행할때 우리는 그보다 훨씬 더 깊은 네트워크의 구조를 탐색하고 싶다.
+그런데 우리가 위와 같은 방식으로 모든 노드를 DAG형태로 연결하게 되면, 노드의 갯수가 늘어날수록 connection의 갯수가 기하급수적으로 늘어나게 되고
+계산량도 급격히 많아져서 효율적인 NAS를 수행할수 없게 된다. 그래서 DARTS는 네트워크를 여러개의 작은 cell으로 나누고, 그 cell들이 sequential
+하게 쌓여있는 형태로 search space를 구성한다.&lt;/p&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/cell-structure.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;you-might-want-a-sub-subheading-h4&quot;&gt;You might want a sub-subheading (h4)&lt;/h4&gt;
+&lt;p&gt;위의 그림에서 하나의 cell이 작은 DAG 형태의 네트워크라고 생각하면 된다. 그림에서 normal cell과 reduction cell 두가지 종류의 cell이 있는데
+normal cell은 input의 spatial resolution (여기선 CNN을 예로 든다)을 변화시키지 않는 cell 이고, reduction cell은 input의 resolution
+을 절반으로 줄이는 cell이다. 이는 CNN을 만들때 점차적으로 resolution을 줄이고 싶을때 사용할 수 있지만 꼭 그렇게 하지 않아도 되고, CNN이 아닌
+다른 종류의 네트워크 구조를 탐색하면 cell이 다른 형식으로 만들어 질 수도 있을 것이다. 이건 구현자 맘이다.&lt;/p&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;h2 id=&quot;optimization&quot;&gt;Optimization&lt;/h2&gt;
+&lt;p&gt;다시 돌아와서, DARTS가 어떻게 search space를 연속적으로 만드는지를 알아 보았으니, 이제 정확히 어떻게 $\alpha$가 학습되는지 알아보자.&lt;/p&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;DARTS의 목표는 validation loss $L_{val}$가 최소가 되게하는 $\alpha$, 즉 $\alpha^{\ast}$ 를 찾는 것이다. 그런데 여기서 주의할 점이 있다. 우리가 학습시킬 meta-network에는 $\alpha$뿐만 아니라 각 operation이 가지는 weights $w$도 있고 (pooling 같이 
+학습 파라미터가 없는 경우를 제외하면) $\mathcal{L}_{val}$는 이 두변수 모두에게 영향을 받는다는 것이다 (training loss도 마찬가지). 더군다나,
+$\alpha$와 $w$도 서로의 값에 따라 영향을 받는다. 이러한 constraint가 있을때, DARTS는 어떻게 두 변수를 최적화 할까? 논문의 수식을 살펴보자:&lt;/p&gt;
 
-&lt;h4 id=&quot;but-its-probably-overkill-h4&quot;&gt;But it’s probably overkill (h4)&lt;/h4&gt;
+\[\underset{\alpha}{\min} \ \mathcal{L}_{val}(w^{\ast}(\alpha), \alpha) \\
+    s.t. w^{\ast}(\alpha) = \underset{w}{argmin} \ \mathcal{L}_{train}(w, a) \tag{3}\]
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;이렇게 두개의 변수가 있고, 그중 하나의 최적와 문제가 ($w$) 다른 하나 ($\alpha$)의 최적화 문제에 nested 되어있는 문제를 &lt;a href=&quot;https://en.wikipedia.org/wiki/Bilevel_optimization&quot;&gt;bilevel
+optimization problem&lt;/a&gt; 이라고 한다 (GAN의 학습방식과 유사하다는 것을 알 수 있다). DARTS는 이 문제를 $\alpha$를 validation loss로, $w$를 training loss로
+번갈아 업데이트하며 최적화 하는 방식으로 해결한다. 그런데 (3)의 식을 보면, $\alpha$를 업데이트할때 $w$가 현재의 $\alpha$가 주어졌을때 
+$L_{train}$에 대해 최적화 되어있어야 한다는 조건이 있다. 그말은 즉 $\alpha$의 gradient:
+$\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)$를 매 스텝 마다 계산할때마다 $w$를 convergence 까지 학습시켜야 한다는 말이다.
+알고리즘이 학습하면서 $\alpha$의 업데이트가 최소 수만번은 업데이트 될 텐데 그때마다 네트워크의 $w$를 새로 학습시키면 당연히 너무 오래 걸릴 것이다.
+그래서 논문의 저자들은 $w$를 한 스텝만 gradient update해서 
+$w^{\ast} (\alpha)$를 근사하자고 제안한다:&lt;/p&gt;
 
-&lt;h5 id=&quot;could-be-a-smaller-sub-heading-pacman-h5&quot;&gt;Could be a smaller sub-heading, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pacman&lt;/code&gt; (h5)&lt;/h5&gt;
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
+    \approx \nabla_{\alpha} L_{val} (w - \xi \nabla_{w} L_{train}(w, \alpha), \alpha)\\
+    %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
+    \tag{4}\]
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;여기서 $w$는 현재의 weight값이고 $\xi$는 $w$를 gradient update할 때의 learning rate이다. 저자들은 이렇게 $w^{\ast} (\alpha)$를 근사해서 bilevel
+optimization을 했을때 학습변수들의 값이 수렴한다는 증명은 없지만 경험적으로 $\xi$의 값을 올바르게 설정했을때 알고리즘이 수렴했다고 한다.&lt;/p&gt;
 
-&lt;h6 id=&quot;small-yet-significant-sub-heading--h6&quot;&gt;Small yet significant sub-heading  (h6)&lt;/h6&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/xi-values.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;위 그래프는 $\xi$의 값이 변화함에 따라 $\alpha$와 $w$가 어떻게, 어디로 수렴하는지를 보여준다. 빨간 동그라미가 global optimum이고 빨간 점선은
+local optimum이다. $\xi$값을 적절히 조정하였을때 알고리즘이 global optimum으로 수렴하는것을 볼 수 있다.&lt;/p&gt;
 
-&lt;h3 id=&quot;oh-hai-an-unordered-list&quot;&gt;Oh hai, an unordered list!!&lt;/h3&gt;
+&lt;h2 id=&quot;first-order-approximation&quot;&gt;First Order Approximation&lt;/h2&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;근데 그래프를 보면 $\xi$가 0 일때도
+어느정도 global optimum으로 수렴하는 것을 볼 수 있다. $\xi = 0$이 무엇을 의미할까? (4)의 식에 대입해보자.&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;First item, yo&lt;/li&gt;
-  &lt;li&gt;Second item, dawg&lt;/li&gt;
-  &lt;li&gt;Third item, what what?!&lt;/li&gt;
-  &lt;li&gt;Fourth item, fo sheezy my neezy&lt;/li&gt;
-&lt;/ul&gt;
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
+    \approx \nabla_{\alpha} L_{val} (w - 0 \cdot \nabla_{w} L_{train}(w, \alpha), \alpha)\\
+    = \nabla_{\alpha} L_{val} (w, \alpha)\\
+    %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
+    \tag{5}\]
 
-&lt;h3 id=&quot;oh-hai-an-ordered-list&quot;&gt;Oh hai, an ordered list!!&lt;/h3&gt;
+&lt;p&gt;$w^{\ast} (\alpha) = w$ 가 되었다. 이는 곧 “우리는 매 $\alpha$ 업데이트 스텝마다 현재의 $w$ 가 이미 주어진 $\alpha$에 대해 최적이라고 간주하겠어”
+라고 하는거다. 다시 말해, $w^{\ast}(\alpha)$를 전혀 approximate 하지 않는 것이다. 이를 논문에서는 first-order approximation 이라고 한다. 그 이유는 (4)의 식에서 chain-rule을 사용하여 gradient를 계산해보면
+Hessian 항이 나오는데 ($\nabla_{\alpha}$와 $\nabla_{w}$가 있어서 $\nabla^{2}_{\alpha, w}$가 나온다. 자세한건 논문 참조) $\xi$를
+0 으로 설정하면 이 Hessian 항이 사라져서 그렇다. First-order approximation을 사용하면
+더 빠르게 계산할 수 있지만 대신 성능이 하락할 수 있는 일종의 cost-performance trade-off로
+볼 수 있다.&lt;/p&gt;
 
-&lt;p&gt;In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.&lt;/p&gt;
+&lt;p&gt;사실, 우리 연구소에서 여러 실험을 해본결과, Hessian 항을 사용했을때 계산시간은 엄청 늘어나는데 비해 성능은 그다지 높지 않거나 오히려 떨어질때가
+많았다. 그래서 나는 개인적으로 DARTS를 써보고 싶은 분들에게 왠만하면 first-order approximation을 쓰라고 권하겠다. 물론 시간과 리소스가 넘친다면 
+둘 다 해보는게 최선이겠지만.&lt;/p&gt;
+
+&lt;h2 id=&quot;architecture-search-overview&quot;&gt;Architecture Search Overview&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/algorithm.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 pseudocode를 보면 지금까지 설명한 search phase가 어떻게 작동하는지 알 수 있다. 먼저 mixed operations을 정의하여 meta-network를 만들고
+$\alpha$와 $w$를 initialize 해준 후 (아래 그림의 b), $\alpha$로 $L_{val}$를, $w$로 $L_{train}$를 한번씩 번갈아가며 업데이트 해준다. 
+네트워크가 수렴하면 (c) search phase가 끝난다. 이제 이 meta-network로 부터 우리는 discrete network를 derive 한 후 (d) evaluate 해야한다.
+어떻게 하는지 알아보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;discretization-step&quot;&gt;Discretization Step&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS-cd.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;학습이 끝난후, DARTS는 각 노드마다 자신과 그 노드의 모든 상위노드 (previous node) 사이의 operation들을 모아서 그 중 $k=2$개의 가장 큰 strength
+를 가진 operation을 남겨두고 나머지는 전부 버려서 discrete한 architecture를 만든다. 여기서 strength는 $\alpha$를 softmax한 값, 즉 $
+\frac{\exp({\alpha_{o}^{(i,j)}})} {\sum_{o’ \in O} \exp(\alpha_{o’}^{(i,j)})} o(x)$를 의미한다. $k$는 여기서 하이퍼파라미터로
+취급되어 구현자 맘대로 바꿔줄 수 있다. 위의 그림에서도 노드2는 하나의 operation이 남겨진 반면, 노드3은 3개가 남았다. 이렇게 network를
+discretize해준 후 얻어진 final network를 처음부터 다시 학습시키면 DARTS를 이용한 NAS가 완성된다.&lt;/p&gt;
+
+&lt;p&gt;사실 DARTS의 여러 맹점중 하나가 바로 이 discretization step인데, 그 이유는 search phase에서 학습시킨 meta-network에서 거의 모든 operation들을
+버려서 만든 final network가 성능이 좋다는 보장이 없기 때문이다. 이는 meta-network와 final network간의 괴리가 너무 심해서 발생하는데 이
+현상을 optimization gap 이라고 부른다. 그래서 이 점을 보완하기위한 후속연구도 진행되었고 (Progressive DARTS), 내 석사논문에서도 이를 보완
+하려고 여러 실험을 해보았다. 이 부분은 나중에 후속연구들을 다룰때 더 자세히 설명해 보도록 하겠다.&lt;/p&gt;
+
+&lt;h2 id=&quot;experimental-results&quot;&gt;Experimental Results&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/post_figures/DARTS-results2.png&quot; alt=&quot;image-title-here&quot; /&gt;
+위의 표는 DARTS를 통해 image classifier를 CIFAR-10과 데이터들을 학습한 결과를 다른 NAS방법들과 비교한 표이다. second order를 사용하여 
+얻은 결과가 state-of-the-art는 아니지만 비슷한 성능을 내고, 그에비해 대부분의 강화학습이나 evolution기반의 NAS방법들에 비해 search cost가
+현저히 적다는 것을 볼 수 있다. 
+&lt;img src=&quot;/post_figures/DARTS-results3.png&quot; alt=&quot;image-title-here&quot; /&gt;
+NAS의 특징중 하나는 한 데이터셋으로부터 얻어진 네트워크 구조를 가지고 다른 (보통 더 큰) 데이터셋에 학습시킬 수 있다는 점이다 (이를 transfer 
+learning 이라고 부른다). 위의 표는 CIFAR-10으로 부터 얻어진 구조를 가지고 ImageNet에 학습시켰을때 나온 결과를 비교하였는데, transfer가 
+상당히 잘 된것을 볼 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;DARTS는 처음으로 gradient descent를 통한 빠르고 효율적인 NAS의 방법론을 제시했고, 실험결과들이 이 방법론의 실용가능성을 보여주었다.
+하지만 현재시점에서, 사실 DARTS가 잘 작동하지 않는다는 논문들도 많이 발표되었고, 이를 보완하기위해 많은 후속연구가 이루어지고 있다. 이 포스팅은
+NAS와 DARTS에 관심이 있으신 분들에게 DARTS의 수학적 작동원리를 설명드리기 위해 작성하였다. 다음 포스팅에서는 DARTS의 단점을 살펴보고,
+후속연구들이 이를 어떤 다양한 방식으로 보완하려 했는지 알아보겠다. DARTS의 코드는 저자들이 공개해 놓았으니 관심이
+있는 분들은 한번 살펴보고 사용해보길 권하겠다. 그리고 이 포스트는 DARTS논문의 내용중 길이 관계상 다루지 않은 것들(cell간 weight sharing, cell안의
+input connection의 갯수와 cell간 connection 등)도 있으니 논문을 직접 확인해 보는 걸 추천드린다.&lt;/p&gt;</content><author><name>Jinu</name></author><category term="Neural Architecture Search" /><summary type="html">Introduction 저번 포스팅에서 Neural Architecture Search가 무엇인지 간략하게 설명하였다. 이번에는 내가 석사논문연구를 하면서 사용한 NAS방법론인 Differentiable Architecture Search (Liu et. al 2019)에 대해서 다루어 보겠다.</summary></entry><entry><title type="html">Neural Architecture Search란?</title><link href="http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html" rel="alternate" type="text/html" title="Neural Architecture Search란?" /><published>2021-04-26T00:00:00+02:00</published><updated>2021-04-26T00:00:00+02:00</updated><id>http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS</id><content type="html" xml:base="http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을
+보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분
+그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를
+결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당
+filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의
+구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다.
+거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도
+달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 
+그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를
+디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진
+task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;three-components&quot;&gt;Three components&lt;/h2&gt;
+&lt;p&gt;내가 석사과정을 밟고 있는 연구소에서 발표한 다양한 NAS 방법론들을 모아 잘 정리 해놓은 &lt;a href=&quot;https://arxiv.org/abs/1808.05377&quot;&gt;논문&lt;/a&gt;이 있다. 이 논문에선 NAS
+알고리즘을 세 개의 component로 나누어 설명한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/post_figures/NAS-figures/NAS-components.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;First item, yo&lt;/li&gt;
-  &lt;li&gt;Second item, dawg&lt;/li&gt;
-  &lt;li&gt;Third item, what what?!&lt;/li&gt;
-  &lt;li&gt;Fourth item, fo sheezy my neezy&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Search space &lt;br /&gt;
+Search space는 알고리즘이 탐색을 수행하는 공간을 의미한다. 이 탐색공간에는 candidate operation (convolution, fully-connected,
+pooling, etc.)의 집합과 그 operation들이 어떻게 연결 되는지, 그리고 총 몇개의 operation이 모여 네트워크를 구성하는지가 정의된다. 그렇기 
+때문에 이 공간의 모든 원소는 각각 하나의 유효한 네트워크 구조 (valid network configuration)를 나타낸다고 할 수 있겠다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Search Strategy &lt;br /&gt;
+Search strategy는 말 그대로 탐색방법을 의미한다. 탐색공간상의 많은 configuration들 중에서 어떤것이 가장 좋은
+configuration인지를 빠르고 효율적으로 찾아낼 수 있는 알고리즘이 좋은 알고리즘이라고 할 수 있다. 탐색방법은 탐색공간을 어떻게 정의하느냐, 목표가
+무엇이냐에 따라 random search, reinforcement learning, evolutionary strategy, gradient descent, bayesian optimization 등
+여러가지 방법이 있다. 그리고 Search strategy를 디자인 할때는 그것이 주어진 탐색공간의 작은 부분만 탐색하지 않고 대부분을 커버하면서
+(exploration) 동시에 탐색공간의 좋은 부분을 빠르게 찾아낼 수 있도록 해야 한다 (exploitation). 보통 이 둘증 하나에 집중하면 다른 하나가 그만큼
+외면되는 경향이 있데, 이러한 현상은 exploration-exploitation trade-off라고 하여 탐색 알고리즘을 디자인할때에 잘 고려해야 하는 현상이다.
+그렇기 때문에 좋은 search strategy는 exploration과 exploitation을 둘 다 잘 수행할 수 있어야한다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Performance Estimation Strategy &lt;br /&gt;
+Figure 1 에서 볼 수 있듯이, 보통 NAS는 search strategy가 하나, 혹은 여러개의 후보 configuration을 추출하면 performance estimation strategy를 
+통해 그것들의 성능을 예측하고, 그 예측치들을 바탕으로 search strategy가 더 좋을 것이라고 생각되는 새로운 configuration들을 추출하는 과정을
+최적의 configuration으로 수렴될때까지 반복수행하는 방식으로 이루어진다. 여기서 performance evaluation이 아닌 estimation인 이유는 모든
+configuration을 일일히 끝까지 학습시켜 evaluate하면 너무 많은 시간이 소요되기때문이다. 그렇기 때문에 후보 configuration들의 성능을
+완전히 학습시키지 않고도 성능을 잘 예측할 수 있는 performance estimation strategy를 개발하는 것이 효율적 NAS 알고리즘을 만드는 중요한
+요소라고 할 수 있다.&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&quot;headings-are-cool-h2&quot;&gt;Headings are cool! (h2)&lt;/h2&gt;
+&lt;h2 id=&quot;examples&quot;&gt;Examples&lt;/h2&gt;
+&lt;p&gt;NAS에 흥미가 있는 분들은 링크를 걸어 놓았으니 아래에 3개의 대표적인 논문들을 읽어 보길 권한다.&lt;/p&gt;
 
-&lt;p&gt;Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1611.01578&quot;&gt;NAS with Reinforcement Learning&lt;/a&gt; &lt;br /&gt;
+ Zoph와 Le의 연구는 처음으로 강화학습을 사용한 NAS 방법론을 제시한 것으로서 NAS의 역사를 논할때 빠지지 않는 중요한 연구이다. 본 연구는 신경망의
+ 구조를 가변길이의 문자열 (variable-length string)으로 나타낼 수 있다는 점에 착안해, 이러한 문자열을 내뱉는 rnn controller (RL의 agent에
+ 해당) 를 만들고, 그것이
+ 출력한 문자열으로 신경망을 만들고 학습하여 얻어진 validation accuracy를 RL의 reward로 보고, controller가 reward를 최대화하는 문자열을
+ 출력하도록 학습을 시켜 NAS를 수행하였다.&lt;/p&gt;
 
-&lt;p&gt;Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.&lt;/p&gt;
-
-&lt;p&gt;Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc.&lt;/p&gt;
-
-&lt;h3 id=&quot;tables&quot;&gt;Tables&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Title 1&lt;/th&gt;
-      &lt;th&gt;Title 2&lt;/th&gt;
-      &lt;th&gt;Title 3&lt;/th&gt;
-      &lt;th&gt;Title 4&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem&lt;/td&gt;
-      &lt;td&gt;lorem ipsum&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Title 1&lt;/th&gt;
-      &lt;th&gt;Title 2&lt;/th&gt;
-      &lt;th&gt;Title 3&lt;/th&gt;
-      &lt;th&gt;Title 4&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem&lt;/td&gt;
-      &lt;td&gt;lorem ipsum&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor sit amet&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit amet consectetur&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit amet&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor&lt;/td&gt;
-      &lt;td&gt;lorem ipsum&lt;/td&gt;
-      &lt;td&gt;lorem&lt;/td&gt;
-      &lt;td&gt;lorem ipsum&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lorem ipsum dolor&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit amet&lt;/td&gt;
-      &lt;td&gt;lorem ipsum dolor sit amet consectetur&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>[&quot;Bart Simpson&quot;, &quot;Nelson Mandela Muntz&quot;]</name></author><category term="junk" /><category term="markdown" /><category term="css" /><category term="html" /><summary type="html">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.</summary></entry><entry><title type="html">Welcome To Jekyll</title><link href="http://localhost:4000/2016/05/20/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome To Jekyll" /><published>2016-05-20T00:00:00+02:00</published><updated>2016-05-20T00:00:00+02:00</updated><id>http://localhost:4000/2016/05/20/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/2016/05/20/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
-
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
-
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Shangzhi Huang</name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry><entry><title type="html">Some articles are just so short that we have to make the footer stick</title><link href="http://localhost:4000/misc/2016/05/19/super-short-article.html" rel="alternate" type="text/html" title="Some articles are just so short that we have to make the footer stick" /><published>2016-05-19T00:00:00+02:00</published><updated>2016-05-19T00:00:00+02:00</updated><id>http://localhost:4000/misc/2016/05/19/super-short-article</id><content type="html" xml:base="http://localhost:4000/misc/2016/05/19/super-short-article.html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;</content><author><name>Shangzhi Huang</name></author><category term="misc" /><summary type="html">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</summary></entry><entry><title type="html">Task Item List</title><link href="http://localhost:4000/2016/01/11/task-item-list.html" rel="alternate" type="text/html" title="Task Item List" /><published>2016-01-11T00:00:00+01:00</published><updated>2016-01-11T00:00:00+01:00</updated><id>http://localhost:4000/2016/01/11/task-item-list</id><content type="html" xml:base="http://localhost:4000/2016/01/11/task-item-list.html">&lt;p&gt;This post tests the style of a task item list.&lt;/p&gt;
-
-&lt;p&gt;Source:&lt;/p&gt;
-
-&lt;div class=&quot;language-markdown highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; [x] Eating
-&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; [ ] Walking
-&lt;span class=&quot;p&quot;&gt;  -&lt;/span&gt; [ ] Running
-&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; [ ] Sleeping
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Rendered:&lt;/p&gt;
-
-&lt;ul class=&quot;task-list&quot;&gt;
-  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Eating&lt;/li&gt;
-  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Walking
-    &lt;ul class=&quot;task-list&quot;&gt;
-      &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Running&lt;/li&gt;
-    &lt;/ul&gt;
+    &lt;p&gt;&lt;img src=&quot;/post_figures/NAS-figures/rnn-controller.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Sleeping&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shangzhi Huang</name></author><category term="to-do list" /><summary type="html">This post tests the style of a task item list.</summary></entry></feed>
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1802.01548&quot;&gt;AmoebaNet&lt;/a&gt; &lt;br /&gt;
+ Evolutionary strategy를 사용한 NAS연구도 있다. Real et. al은 정의된 search space로 부터 랜덤하게 샘플링된 네트워크들의 population을 학습시키고,
+ 그 중 validation loss가 가장 낮은 네트워크들의 구조에 random mutation을 주어 학습시키는 작업을 반복해서 최적의 네트워크 구조가 학습될
+ 수 있도록 하였다.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/post_figures/NAS-figures/mutation.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1806.09055.pdf&quot;&gt;Differentiable Architecture Search (DARTS)&lt;/a&gt;&lt;/p&gt;
+
+    &lt;p&gt;DARTS는 처음으로 search space를 미분가능한 형태로 변환시켜 architecture search를 gradient descent를 통하여 수행한 최초의 논문이다.
+ DARTS의 탐색은 위의 방법들보다 훨씬 빠르기 때문에 논문이 공개되었을때 상당히 주목을 받았고, 내 석사논문연구에서도 DARTS를 보완한 알고리즘을
+ 사용하였다. DARTS는 내가 개인적으로 굉장히 흥미롭다고 생각되는 방법이기 때문에 다음 포스팅에서는 DARTS를 리뷰하고 그 수학적 원리를 설명해 보겠다.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/post_figures/NAS-figures/DARTS.png&quot; alt=&quot;image-title-here&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Jinu</name></author><category term="Neural Architecture Search" /><summary type="html">Introduction 심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을 보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분 그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를 결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당 filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의 구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다. 거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도 달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를 디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진 task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다.</summary></entry></feed>

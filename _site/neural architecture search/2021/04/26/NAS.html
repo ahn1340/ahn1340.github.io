@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Neural Architecture Search란? | Jinu’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.1" />
+<meta property="og:title" content="Neural Architecture Search란?" />
+<meta name="author" content="Jinu" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Introduction 심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을 보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분 그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를 결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당 filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의 구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다. 거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도 달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를 디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진 task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다." />
+<meta property="og:description" content="Introduction 심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을 보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분 그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를 결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당 filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의 구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다. 거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도 달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를 디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진 task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다." />
+<link rel="canonical" href="http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html" />
+<meta property="og:url" content="http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html" />
+<meta property="og:site_name" content="Jinu’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-26T00:00:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Neural Architecture Search란?" />
+<meta name="google-site-verification" content="u4WXQl0Eu66rsQo2kRdCNx" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Neural Architecture Search란?","dateModified":"2021-04-26T00:00:00+02:00","datePublished":"2021-04-26T00:00:00+02:00","url":"http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/neural%20architecture%20search/2021/04/26/NAS.html"},"author":{"@type":"Person","name":"Jinu"},"description":"Introduction 심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을 보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분 그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를 결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당 filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의 구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다. 거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도 달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를 디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진 task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Jinu's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ["\\(", "\\)"] ],
+      displayMath: [ ['$$', '$$'], ["\\[", "\\]"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+    //,
+    //displayAlign: "left",
+    //displayIndent: "2em"
+  });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Jinu&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/faq/">FAQ</a>
+                    <a class="" href="/docs/">Docs</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/guitar.jpeg" class="author-avatar u-photo align-center" alt="Jinu">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Jinu</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:ahn13400@gmail.com">ahn13400@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/ahn1340/"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li>
+    </ul>
+  </div>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Neural Architecture Search란?</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2021-04-26T00:00:00+02:00" itemprop="datePublished">
+        Apr 26, 2021
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="introduction">Introduction</h2>
+<p>심층신경망(Deep Neural Networks)은 딥러닝 시대 이전의 기술들로는 해결할 수 없던 여러 Task들을 성공적으로 수행할 수 있음을
+보여주었다. 하지만, 현재 Image Recognition등 많은 problem domain에서 state-of-the-art 성능을 내는 모델들의 구조는 대부분
+그 분야의 전문가들이 손수 디자인한 결과이다. 딥러닝 연구자들은 잘 알겠지만, task와 데이터셋이 주어졌을때 어떠한 구조를 사용해야 할지를
+결정하는 것은 정말 피곤한 작업이다. 예를 들어, convolutional network를 만들때, hidden layer는 몇개를 쓸 것인지, layer당
+filter는 몇개를 쓸 것인지, filter의 size, padding, stride는 어떻게 설정할 것인지, 언제 pooling을 할 것인지 같은 것들은 모델의
+구현자가 직접 설정해줘야되는데, 문제는 이러한 design decision들이 좋은지 안좋은지는 모델을 학습시켜보기전까진 모른다는 것이다.
+거기다가, 최적의 신경망구조가 딱 하나로 정해져있으면 좋겠지만, 어느 task에서 어느 데이터셋을 쓰느냐에 따라 최적의 네트워크 구조도
+달라지기 때문에 한 데이터셋에서 좋은 결과를 냈다고 해서 다른 데이터셋에서도 같은 구조의 모델이 좋은 성능을 보일거라는 보장이 없다. 
+그리고 (어느정도 깊이가 있는) 인공신경망은 머신러닝 모델들 중에서도 학습속도가 느리기로 악명이 높다. 결국, 최적의 네트워크 구조를
+디자인은 하는 일은 시간 겁나 버리는 힘든 일이라는 것이다. Neural Architecture Search (NAS)는 바로 이 힘든 작업을 자동화하여 주어진
+task에 가장 최적인 네트워크 구조를 편리하고 빠르게 탐색하는 방법론을 연구하는 분야이다.</p>
+
+<h2 id="three-components">Three components</h2>
+<p>내가 석사과정을 밟고 있는 연구소에서 발표한 다양한 NAS 방법론들을 모아 잘 정리 해놓은 <a href="https://arxiv.org/abs/1808.05377">논문</a>이 있다. 이 논문에선 NAS
+알고리즘을 세 개의 component로 나누어 설명한다.</p>
+
+<p><img src="/post_figures/NAS-figures/NAS-components.png" alt="image-title-here" /></p>
+
+<ol>
+  <li>
+    <p>Search space <br />
+Search space는 알고리즘이 탐색을 수행하는 공간을 의미한다. 이 탐색공간에는 candidate operation (convolution, fully-connected,
+pooling, etc.)의 집합과 그 operation들이 어떻게 연결 되는지, 그리고 총 몇개의 operation이 모여 네트워크를 구성하는지가 정의된다. 그렇기 
+때문에 이 공간의 모든 원소는 각각 하나의 유효한 네트워크 구조 (valid network configuration)를 나타낸다고 할 수 있겠다.</p>
+  </li>
+  <li>
+    <p>Search Strategy <br />
+Search strategy는 말 그대로 탐색방법을 의미한다. 탐색공간상의 많은 configuration들 중에서 어떤것이 가장 좋은
+configuration인지를 빠르고 효율적으로 찾아낼 수 있는 알고리즘이 좋은 알고리즘이라고 할 수 있다. 탐색방법은 탐색공간을 어떻게 정의하느냐, 목표가
+무엇이냐에 따라 random search, reinforcement learning, evolutionary strategy, gradient descent, bayesian optimization 등
+여러가지 방법이 있다. 그리고 Search strategy를 디자인 할때는 그것이 주어진 탐색공간의 작은 부분만 탐색하지 않고 대부분을 커버하면서
+(exploration) 동시에 탐색공간의 좋은 부분을 빠르게 찾아낼 수 있도록 해야 한다 (exploitation). 보통 이 둘증 하나에 집중하면 다른 하나가 그만큼
+외면되는 경향이 있데, 이러한 현상은 exploration-exploitation trade-off라고 하여 탐색 알고리즘을 디자인할때에 잘 고려해야 하는 현상이다.
+그렇기 때문에 좋은 search strategy는 exploration과 exploitation을 둘 다 잘 수행할 수 있어야한다.</p>
+  </li>
+  <li>
+    <p>Performance Estimation Strategy <br />
+Figure 1 에서 볼 수 있듯이, 보통 NAS는 search strategy가 하나, 혹은 여러개의 후보 configuration을 추출하면 performance estimation strategy를 
+통해 그것들의 성능을 예측하고, 그 예측치들을 바탕으로 search strategy가 더 좋을 것이라고 생각되는 새로운 configuration들을 추출하는 과정을
+최적의 configuration으로 수렴될때까지 반복수행하는 방식으로 이루어진다. 여기서 performance evaluation이 아닌 estimation인 이유는 모든
+configuration을 일일히 끝까지 학습시켜 evaluate하면 너무 많은 시간이 소요되기때문이다. 그렇기 때문에 후보 configuration들의 성능을
+완전히 학습시키지 않고도 성능을 잘 예측할 수 있는 performance estimation strategy를 개발하는 것이 효율적 NAS 알고리즘을 만드는 중요한
+요소라고 할 수 있다.</p>
+  </li>
+</ol>
+
+<h2 id="examples">Examples</h2>
+<p>NAS에 흥미가 있는 분들은 링크를 걸어 놓았으니 아래에 3개의 대표적인 논문들을 읽어 보길 권한다.</p>
+
+<ol>
+  <li>
+    <p><a href="https://arxiv.org/abs/1611.01578">NAS with Reinforcement Learning</a> <br />
+ Zoph와 Le의 연구는 처음으로 강화학습을 사용한 NAS 방법론을 제시한 것으로서 NAS의 역사를 논할때 빠지지 않는 중요한 연구이다. 본 연구는 신경망의
+ 구조를 가변길이의 문자열 (variable-length string)으로 나타낼 수 있다는 점에 착안해, 이러한 문자열을 내뱉는 rnn controller (RL의 agent에
+ 해당) 를 만들고, 그것이
+ 출력한 문자열으로 신경망을 만들고 학습하여 얻어진 validation accuracy를 RL의 reward로 보고, controller가 reward를 최대화하는 문자열을
+ 출력하도록 학습을 시켜 NAS를 수행하였다.</p>
+
+    <p><img src="/post_figures/NAS-figures/rnn-controller.png" alt="image-title-here" /></p>
+  </li>
+  <li>
+    <p><a href="https://arxiv.org/abs/1802.01548">AmoebaNet</a> <br />
+ Evolutionary strategy를 사용한 NAS연구도 있다. Real et. al은 정의된 search space로 부터 랜덤하게 샘플링된 네트워크들의 population을 학습시키고,
+ 그 중 validation loss가 가장 낮은 네트워크들의 구조에 random mutation을 주어 학습시키는 작업을 반복해서 최적의 네트워크 구조가 학습될
+ 수 있도록 하였다.</p>
+
+    <p><img src="/post_figures/NAS-figures/mutation.png" alt="image-title-here" /></p>
+  </li>
+  <li>
+    <p><a href="https://arxiv.org/abs/1806.09055.pdf">Differentiable Architecture Search (DARTS)</a></p>
+
+    <p>DARTS는 처음으로 search space를 미분가능한 형태로 변환시켜 architecture search를 gradient descent를 통하여 수행한 최초의 논문이다.
+ DARTS의 탐색은 위의 방법들보다 훨씬 빠르기 때문에 논문이 공개되었을때 상당히 주목을 받았고, 내 석사논문연구에서도 DARTS를 보완한 알고리즘을
+ 사용하였다. DARTS는 내가 개인적으로 굉장히 흥미롭다고 생각되는 방법이기 때문에 다음 포스팅에서는 DARTS를 리뷰하고 그 수학적 원리를 설명해 보겠다.</p>
+
+    <p><img src="/post_figures/NAS-figures/DARTS.png" alt="image-title-here" /></p>
+  </li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#neural-architecture-search">Neural Architecture Search</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+
+      
+        <a class="post-next" href="/neural%20architecture%20search/2021/05/03/DARTS.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Differentiable Architecture Search (DARTS)의 원리
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2021 Jinu; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>딥러닝 논문 리뷰 및 구현 블로그</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>
