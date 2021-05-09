@@ -17,10 +17,10 @@ remote_theme: ngzhio/jekyll-theme-hamilton
 
 # Uncomment the below line and set the tracking ID for enabling Google Analytics
 # 
-# google_analytics: 
+google_analytics: UA-196516652-1
 
 # Uncomment the below lines and set the Disqus shortname for enabling Disqus
-# 
+#
 # disqus:
 
 # Jekyll
