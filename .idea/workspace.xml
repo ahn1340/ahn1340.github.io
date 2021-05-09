@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c278b46d-c2e1-4e9c-814f-c1a2f92a8b68" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/_posts/2021-04-26-NAS.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2021-04-26-NAS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2021-05-03-DARTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2021-05-03-DARTS.md" afterDir="false" />
-    </list>
+    <list default="true" id="c278b46d-c2e1-4e9c-814f-c1a2f92a8b68" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,23 +10,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/_posts/2021-04-26-NAS.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="60">
-                <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+                <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
               </first_editor>
               <second_editor />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/_sass/hamilton/layout.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="298">
+              <caret line="325" column="10" selection-start-line="325" selection-start-column="10" selection-end-line="325" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -47,7 +44,7 @@
         <entry file="file://$PROJECT_DIR$/_includes/disqus.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -123,6 +120,7 @@
       <find>ngzhio</find>
       <find>mathjax.html</find>
       <find>include disqus.</find>
+      <find>scrollbar</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -232,16 +230,15 @@
       <workItem from="1620120955811" duration="7020000" />
       <workItem from="1620290404248" duration="10965000" />
       <workItem from="1620370762189" duration="27318000" />
-      <workItem from="1620534835270" duration="7996000" />
+      <workItem from="1620534835270" duration="8664000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="80321000" />
+    <option name="totallyTimeSpent" value="80989000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26950747" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -463,7 +460,7 @@
     <entry file="file://$PROJECT_DIR$/_includes/disqus.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
@@ -495,9 +492,16 @@
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="60">
-            <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+            <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_sass/hamilton/layout.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="325" column="10" selection-start-line="325" selection-start-column="10" selection-end-line="325" selection-end-column="10" />
         </state>
       </provider>
     </entry>
