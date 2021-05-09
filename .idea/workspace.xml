@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c278b46d-c2e1-4e9c-814f-c1a2f92a8b68" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/_site/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/404.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/about/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/about/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/categories/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/categories/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/faq/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/faq/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/feed.xml" beforeDir="false" afterPath="$PROJECT_DIR$/_site/feed.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/neural architecture search/2021/04/26/NAS.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/neural architecture search/2021/04/26/NAS.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/neural architecture search/2021/05/03/DARTS.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/neural architecture search/2021/05/03/DARTS.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/tags/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/tags/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/years/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/years/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="c278b46d-c2e1-4e9c-814f-c1a2f92a8b68" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +50,11 @@
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -154,6 +146,7 @@
         <option value="$PROJECT_DIR$/_posts/2021-05-03-DARTS.md" />
         <option value="$PROJECT_DIR$/_config.yml" />
         <option value="$PROJECT_DIR$/_data/social.yml" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -223,16 +216,15 @@
       <workItem from="1620120296259" duration="646000" />
       <workItem from="1620120955811" duration="7020000" />
       <workItem from="1620290404248" duration="10965000" />
-      <workItem from="1620370762189" duration="27254000" />
+      <workItem from="1620370762189" duration="27318000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72261000" />
+    <option name="totallyTimeSpent" value="72325000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26618704" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -481,7 +473,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
