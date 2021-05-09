@@ -33,7 +33,7 @@
 
 
   <script async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js"></script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -44,7 +44,7 @@ MathJax.Hub.Config({
     },
     tex2jax: {
     inlineMath: [ ['$', '$'] ],
-    displayMath: [ ['$$', '$$'] ],
+    displayMath: [ ['$$', '$$'],  ["\\[","\\]"]],
     processEscapes: true,
   }
 });
@@ -299,8 +299,8 @@ $\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)$를 매 스텝 마다 계�
 그래서 논문의 저자들은 $w$를 한 스텝만 gradient update해서 
 $w^{\ast} (\alpha)$를 근사하자고 제안한다:</p>
 
-\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
-    \approx \nabla_{\alpha} L_{val} (w - \xi \nabla_{w} L_{train}(w, \alpha), \alpha)\\
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha) \\
+    \approx \nabla_{\alpha} L_{val} (w - \xi \nabla_{w} L_{train}(w, \alpha), \alpha) \\
     %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
     \tag{4}\]
 
@@ -317,10 +317,9 @@ local optimum이다. $\xi$값을 적절히 조정하였을때 알고리즘이 gl
 <p>근데 그래프를 보면 $\xi$가 0 일때도
 어느정도 global optimum으로 수렴하는 것을 볼 수 있다. $\xi = 0$이 무엇을 의미할까? (4)의 식에 대입해보자.</p>
 
-\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
-    \approx \nabla_{\alpha} L_{val} (w - 0 \cdot \nabla_{w} L_{train}(w, \alpha), \alpha)\\
-    = \nabla_{\alpha} L_{val} (w, \alpha)\\
-    %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha) \\
+    \approx \nabla_{\alpha} L_{val} (w - 0 \cdot \nabla_{w} L_{train}(w, \alpha), \alpha) \\
+    = \nabla_{\alpha} L_{val} (w, \alpha) \\
     \tag{5}\]
 
 <p>$w^{\ast} (\alpha) = w$ 가 되었다. 이는 곧 “우리는 매 $\alpha$ 업데이트 스텝마다 현재의 $w$ 가 이미 주어진 $\alpha$에 대해 최적이라고 간주하겠어”

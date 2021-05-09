@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2021-05-09T07:29:40+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jinu’s Blog</title><subtitle>딥러닝 논문 리뷰 블로그</subtitle><author><name>Jinu</name></author><entry><title type="html">Differentiable Architecture Search (DARTS)의 원리</title><link href="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html" rel="alternate" type="text/html" title="Differentiable Architecture Search (DARTS)의 원리" /><published>2021-05-03T00:00:00+02:00</published><updated>2021-05-03T00:00:00+02:00</updated><id>http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS</id><content type="html" xml:base="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2021-05-09T07:54:21+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jinu’s Blog</title><subtitle>딥러닝 논문 리뷰 블로그</subtitle><author><name>Jinu</name></author><entry><title type="html">Differentiable Architecture Search (DARTS)의 원리</title><link href="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html" rel="alternate" type="text/html" title="Differentiable Architecture Search (DARTS)의 원리" /><published>2021-05-03T00:00:00+02:00</published><updated>2021-05-03T00:00:00+02:00</updated><id>http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS</id><content type="html" xml:base="http://localhost:4000/neural%20architecture%20search/2021/05/03/DARTS.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;저번 포스팅에서 Neural Architecture Search가 무엇인지 간략하게 설명하였다. 이번에는 내가 석사논문연구를 하면서 사용한 NAS방법론인
 &lt;a href=&quot;https://arxiv.org/abs/1806.09055.pdf&quot;&gt;Differentiable Architecture Search (Liu et. al 2019)&lt;/a&gt;에 대해서 다루어 보겠다.&lt;/p&gt;
 
@@ -98,8 +98,8 @@ $\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)$를 매 스텝 마다 계�
 그래서 논문의 저자들은 $w$를 한 스텝만 gradient update해서 
 $w^{\ast} (\alpha)$를 근사하자고 제안한다:&lt;/p&gt;
 
-\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
-    \approx \nabla_{\alpha} L_{val} (w - \xi \nabla_{w} L_{train}(w, \alpha), \alpha)\\
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha) \\
+    \approx \nabla_{\alpha} L_{val} (w - \xi \nabla_{w} L_{train}(w, \alpha), \alpha) \\
     %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
     \tag{4}\]
 
@@ -116,10 +116,9 @@ local optimum이다. $\xi$값을 적절히 조정하였을때 알고리즘이 gl
 &lt;p&gt;근데 그래프를 보면 $\xi$가 0 일때도
 어느정도 global optimum으로 수렴하는 것을 볼 수 있다. $\xi = 0$이 무엇을 의미할까? (4)의 식에 대입해보자.&lt;/p&gt;
 
-\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha)\\
-    \approx \nabla_{\alpha} L_{val} (w - 0 \cdot \nabla_{w} L_{train}(w, \alpha), \alpha)\\
-    = \nabla_{\alpha} L_{val} (w, \alpha)\\
-    %= \nabla_{\alpha} L_{val} (w^{\prime}, \alpha) - \xi \nabla^{2}_{\alpha, w} L_{train} (w, \alpha) \nabla_{w^{\prime}} L_{val} (w^{\prime}, \alpha),
+\[\nabla_{\alpha} L_{val} (w^{\ast} (\alpha), \alpha) \\
+    \approx \nabla_{\alpha} L_{val} (w - 0 \cdot \nabla_{w} L_{train}(w, \alpha), \alpha) \\
+    = \nabla_{\alpha} L_{val} (w, \alpha) \\
     \tag{5}\]
 
 &lt;p&gt;$w^{\ast} (\alpha) = w$ 가 되었다. 이는 곧 “우리는 매 $\alpha$ 업데이트 스텝마다 현재의 $w$ 가 이미 주어진 $\alpha$에 대해 최적이라고 간주하겠어”
