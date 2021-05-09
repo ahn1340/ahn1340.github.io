@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c278b46d-c2e1-4e9c-814f-c1a2f92a8b68" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/mathjax.html" beforeDir="false" afterPath="$PROJECT_DIR$/_includes/mathjax.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_site/feed.xml" beforeDir="false" afterPath="$PROJECT_DIR$/_site/feed.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_site/neural architecture search/2021/05/03/DARTS.html" beforeDir="false" afterPath="$PROJECT_DIR$/_site/neural architecture search/2021/05/03/DARTS.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,20 +96,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/_includes/head.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="13" column="25" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="25" />
+            <state relative-caret-position="705">
+              <caret line="47" column="29" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/_includes/mathjax.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            <state relative-caret-position="15">
+              <caret line="1" column="109" selection-start-line="1" selection-start-column="109" selection-end-line="1" selection-end-column="109" />
             </state>
           </provider>
         </entry>
@@ -153,6 +152,7 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/_posts/2021-05-03-DARTS.md" />
         <option value="$PROJECT_DIR$/_includes/head.html" />
+        <option value="$PROJECT_DIR$/_includes/mathjax.html" />
       </list>
     </option>
   </component>
@@ -233,12 +233,12 @@
       <workItem from="1620120955811" duration="7020000" />
       <workItem from="1620290404248" duration="10965000" />
       <workItem from="1620370762189" duration="27318000" />
-      <workItem from="1620534835270" duration="1300000" />
+      <workItem from="1620534835270" duration="1639000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73625000" />
+    <option name="totallyTimeSpent" value="73964000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
@@ -467,17 +467,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_includes/mathjax.html">
+    <entry file="file://$PROJECT_DIR$/_includes/head.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        <state relative-caret-position="705">
+          <caret line="47" column="29" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_includes/head.html">
+    <entry file="file://$PROJECT_DIR$/_includes/mathjax.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="13" column="25" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="25" />
+        <state relative-caret-position="15">
+          <caret line="1" column="109" selection-start-line="1" selection-start-column="109" selection-end-line="1" selection-end-column="109" />
         </state>
       </provider>
     </entry>
