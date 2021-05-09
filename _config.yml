@@ -21,7 +21,7 @@ google_analytics: UA-196516652-1
 
 # Uncomment the below lines and set the Disqus shortname for enabling Disqus
 #
-# disqus:
+disqus: ahn1340-github-io
 
 # Jekyll
 # ======
